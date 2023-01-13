@@ -22,6 +22,20 @@ builder.Services.AddDbContext<Context>(options =>
 
 });
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+
+                          policy.WithOrigins("https://vue-yxzy6f.stackblitz.io/",
+                                             "https://vue-yxzy6f.stackblitz.io");
+                      });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +44,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 
