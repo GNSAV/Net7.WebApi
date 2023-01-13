@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Repositories
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); ;
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
 
 
 builder.Services.AddDbContext<Context>(options =>

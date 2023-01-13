@@ -10,7 +10,7 @@ namespace Net7.WebApi.Repositorios
         T GetById(int id); // Obtiene una entidad por su ID
         void Insert(T entity); // Inserta una nueva entidad
         void Update(T entity); // Actualiza una entidad existente
-        void Delete(T entity); // Elimina una entidad existente
+        bool Delete(int id); // Elimina una entidad existente
         void SaveChanges(); // Guarda los cambios en la base de datos
     }
 
@@ -46,9 +46,16 @@ namespace Net7.WebApi.Repositorios
             _context.Update(entity);
         }
 
-        public void Delete(T entity)
+        public bool Delete(int id)
         {
-            _dbSet.Remove(entity);
+            var result = GetById(id);
+            if (result != null)
+            {
+                _dbSet.Remove(result);
+                return true;    
+            }
+
+            return false;
         }
 
         public void SaveChanges()

@@ -2,6 +2,7 @@
 using Net7.WebApi.Entidades;
 using Net7.WebApi.Persistencia;
 using Net7.WebApi.Repositorios;
+using System.Net;
 
 namespace Net7.WebApi.Controllers
 {
@@ -9,14 +10,8 @@ namespace Net7.WebApi.Controllers
     [Route("api/[controller]")]
     public class FrutaRController : ControllerBase
     {
-        private readonly Context context;
         private readonly IGenericRepository<Fruta> repo;
-
-        public FrutaRController(Context context, IGenericRepository<Fruta> repo)
-        {
-            this.context = context;
-            this.repo = repo;
-        }
+        public FrutaRController(IGenericRepository<Fruta> repo) => this.repo = repo;
 
         // Este método es una acción de controlador en un controlador web API
         // que se encarga de obtener todas las frutas. La acción utiliza la propiedad
@@ -26,5 +21,66 @@ namespace Net7.WebApi.Controllers
 
         [HttpGet]
         public IEnumerable<Fruta> GetFrutas() => repo.GetAll();
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Fruta>> GetById(int id)
+        {
+            var result = repo.GetById(id);
+            if(result == null)
+            {
+                return NotFound("No se encontro la fruta.");
+            }
+            return result;  
+        }
+
+
+        [HttpPost]
+        public Fruta Post(Fruta data)
+        {
+            repo.Insert(data);
+            repo.SaveChanges();
+            return data;   
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var result = repo.Delete(id);
+            if (result)
+            {
+                repo.SaveChanges();
+                return Ok($"Eliminado la fruta con id : {id}");
+            }
+
+            return NotFound($"No se elimino la fruta con id : {id}");
+            
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, [FromBody] Fruta fruta)
+        {
+            var existingFruta = repo.GetById(id);
+            if (existingFruta == null)
+            {
+                return NotFound();
+            }
+
+            repo.Update(fruta);
+            repo.SaveChanges();
+
+            return Ok();
+        }
+
+
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Caja>> GetById(Guid id)
+        //{
+        //    var result = await mediator.Send(new GetCajaByIdQuery(id));
+        //    if (result == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return result;
+        //}
     }
 }
