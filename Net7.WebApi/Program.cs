@@ -31,7 +31,7 @@ builder.Services.AddCors(options =>
                       {
 
                           policy.WithOrigins("https://vue-yxzy6f.stackblitz.io/",
-                                             "https://vue-yxzy6f.stackblitz.io");
+                                             "https://vue-yxzy6f.stackblitz.io").AllowAnyHeader().AllowAnyMethod(); ;
                       });
 });
 
